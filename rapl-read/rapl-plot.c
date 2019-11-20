@@ -1,4 +1,5 @@
 /* Plot the rapl results */
+// gcc -O2 -Wall -o rapl-plot rapl-plot.c -lm
 /*									*/
 /* Vince Weaver -- vincent.weaver @ maine.edu -- 13 April 2017		*/
 /*									*/
@@ -70,6 +71,8 @@ double cores_energy[MAX_PACKAGES],last_cores[MAX_PACKAGES];
 double uncore_energy[MAX_PACKAGES],last_uncore[MAX_PACKAGES];
 double dram_energy[MAX_PACKAGES],last_dram[MAX_PACKAGES];
 double psys_energy[MAX_PACKAGES],last_psys[MAX_PACKAGES];
+double total_energy; 
+double current_power; 
 
 #define PACKAGE 1
 #define CORES	2
@@ -845,6 +848,9 @@ ready:
 		if (available&UNCORE) printf("GPU(W)\t\t");
 		if (available&DRAM) printf("DRAM(W)\t\t");
 		if (available&PSYS) printf("Psys(W)|\t");
+		printf("Current Power(W)\t"); 
+		printf("Total Engery(J)\t"); 
+
 	}
 	printf("\n");
 	while(1) {
@@ -867,17 +873,42 @@ ready:
 		}
 		else {
 		printf("%lf\t",ct-ot);
-		for(j=0;j<total_packages;j++) {
-			if (available&PACKAGE) printf("%lf\t",
-					(package_energy[j]-last_package[j])/(ct-lt));
-			if (available&CORES) printf("%lf\t",
-					(cores_energy[j]-last_cores[j])/(ct-lt));
-			if (available&UNCORE) printf("%lf\t",
-					(uncore_energy[j]-last_uncore[j])/(ct-lt));
-			if (available&DRAM) printf("%lf\t",
-					(dram_energy[j]-last_dram[j])/(ct-lt));
-			if (available&PSYS) printf("%lf\t",
-					(psys_energy[j]-last_psys[j])/(ct-lt));
+		for(j=0;j<total_packages;j++) 
+		{
+			current_power = 0.0; 
+
+			if (available&PACKAGE) 
+				{
+					printf("%lf\t", (package_energy[j]-last_package[j])/(ct-lt));
+					total_energy += (package_energy[j]-last_package[j])/(ct-lt); 
+					current_power += (package_energy[j]-last_package[j])/(ct-lt); 
+				}
+			if (available&CORES) 
+				{
+					printf("%lf\t", (cores_energy[j]-last_cores[j])/(ct-lt));
+					total_energy += (cores_energy[j]-last_cores[j])/(ct-lt); 
+					current_power += (cores_energy[j]-last_cores[j])/(ct-lt);
+				}
+			if (available&UNCORE) 
+				{
+					printf("%lf\t", (uncore_energy[j]-last_uncore[j])/(ct-lt));
+					total_energy +=  (uncore_energy[j]-last_uncore[j])/(ct-lt); 
+					current_power +=  (uncore_energy[j]-last_uncore[j])/(ct-lt); 
+				}
+			if (available&DRAM) 
+				{
+					printf("%lf\t", (dram_energy[j]-last_dram[j])/(ct-lt));
+					total_energy += (dram_energy[j]-last_dram[j])/(ct-lt); 
+					current_power += (dram_energy[j]-last_dram[j])/(ct-lt); 
+				}
+			if (available&PSYS) 
+				{
+					printf("%lf\t", (psys_energy[j]-last_psys[j])/(ct-lt));
+					total_energy += (psys_energy[j]-last_psys[j])/(ct-lt); 
+					current_power += (psys_energy[j]-last_psys[j])/(ct-lt);  
+				}
+				printf("%lf\t", current_power); 
+				printf("%lf\t", total_energy); 
 		}
 		printf("\n");
 		}
