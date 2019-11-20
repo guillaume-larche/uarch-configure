@@ -71,7 +71,7 @@ double cores_energy[MAX_PACKAGES],last_cores[MAX_PACKAGES];
 double uncore_energy[MAX_PACKAGES],last_uncore[MAX_PACKAGES];
 double dram_energy[MAX_PACKAGES],last_dram[MAX_PACKAGES];
 double psys_energy[MAX_PACKAGES],last_psys[MAX_PACKAGES];
-double total_energy; 
+long double  total_energy; 
 double current_power; 
 
 #define PACKAGE 1
@@ -880,35 +880,35 @@ ready:
 			if (available&PACKAGE) 
 				{
 					printf("%lf\t", (package_energy[j]-last_package[j])/(ct-lt));
-					total_energy += (package_energy[j]-last_package[j])/(ct-lt); 
+					total_energy += (long double)(package_energy[j]-last_package[j])/(ct-lt); 
 					current_power += (package_energy[j]-last_package[j])/(ct-lt); 
 				}
 			if (available&CORES) 
 				{
 					printf("%lf\t", (cores_energy[j]-last_cores[j])/(ct-lt));
-					total_energy += (cores_energy[j]-last_cores[j])/(ct-lt); 
+					total_energy += (long double)(cores_energy[j]-last_cores[j])/(ct-lt); 
 					current_power += (cores_energy[j]-last_cores[j])/(ct-lt);
 				}
 			if (available&UNCORE) 
 				{
 					printf("%lf\t", (uncore_energy[j]-last_uncore[j])/(ct-lt));
-					total_energy +=  (uncore_energy[j]-last_uncore[j])/(ct-lt); 
+					total_energy +=  (long double)(uncore_energy[j]-last_uncore[j])/(ct-lt); 
 					current_power +=  (uncore_energy[j]-last_uncore[j])/(ct-lt); 
 				}
 			if (available&DRAM) 
 				{
 					printf("%lf\t", (dram_energy[j]-last_dram[j])/(ct-lt));
-					total_energy += (dram_energy[j]-last_dram[j])/(ct-lt); 
+					total_energy += (long double)(dram_energy[j]-last_dram[j])/(ct-lt); 
 					current_power += (dram_energy[j]-last_dram[j])/(ct-lt); 
 				}
 			if (available&PSYS) 
 				{
 					printf("%lf\t", (psys_energy[j]-last_psys[j])/(ct-lt));
-					total_energy += (psys_energy[j]-last_psys[j])/(ct-lt); 
+					total_energy += (long double)(psys_energy[j]-last_psys[j])/(ct-lt); 
 					current_power += (psys_energy[j]-last_psys[j])/(ct-lt);  
 				}
 				printf("%lf\t", current_power); 
-				printf("%lf\t", total_energy); 
+				printf("%llf\t", total_energy); 
 		}
 		printf("\n");
 		}
